@@ -15,7 +15,7 @@ def Ffunc(t,B):
 	a = 2.*math.pi*B/math.sqrt(math.log(2.))
 	return 0.5*(Qfunc((t-0.5)*a)-Qfunc((t+0.5)*a))
 
-def _Fserial(B,OS,R,W):
+def Fserial(B,OS,R,W):
 	X=[]
 	rr = int(OS*R)
 	for t in range(-rr,rr):
@@ -32,19 +32,12 @@ def _Fserial(B,OS,R,W):
 		Y.append(int(sum/all*float(W-1)+.5))
 	return Y
 
-def Fserial(beta):
-	alf = int(beta/math.pi*4.*2.*65536.)
-	S = {}
-	S['-'] = _Fserial(0.5,1024,0.5,65536*2-alf)
-	S['0'] = _Fserial(0.5,1024,0.5,65536*2)
-	S['+'] = _Fserial(0.5,1024,0.5,65536*2+alf)
-	return S
 
 
 if __name__ == '__main__':
-	S = _Fserial(0.5,1024,0.5,65536)
+	S = Fserial(0.5,1024,0.5,65536)
 	print "#",len(S)
 	for T in range(0,len(S)):
 		print T,S[T]
 
-S = Fserial(math.pi/8.)
+#S = Fserial(math.pi/8.)
