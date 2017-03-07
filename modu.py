@@ -1,6 +1,7 @@
 import const
 import freqTab
 import math
+import numpy as np
 
 def map(D,P):
 	r = []
@@ -44,12 +45,18 @@ def modu(D,P,E,b,W):
 
 	return d
 
+def toComplex(s,W):
+	M = 2.*math.pi/float(1<<W)
+	r = [1j*float(a)*M for a in s]
+	return np.exp(np.array(r))
 def main():
-	D = [1,1,-1,1,-1,-1,1,-1]
-	P = [1,-1,-1,-1,-1,1,1,1]
+	import utils
+	D = utils.rsrc(1024)
+	P = utils.rsrc(1024)
 	d = modu(D,P,4,math.pi/8,18)
+	c = toComplex(d,18)
 	import matplotlib.pyplot as plt
-	plt.plot(d)
+	plt.plot(20.*np.log10(utils.spectrum(c)))
 	plt.show()
 
 if __name__ == '__main__':
