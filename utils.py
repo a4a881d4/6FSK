@@ -12,15 +12,16 @@ def rsrc(L):
 	x = [1-2*x for x in r]
 	return x
 
+def fftOnce(x):
+	W = len(x)
+	hw = np.hamming(W)
+	ss = np.fft.fft(x*hw)
+	return np.conj(ss)*ss
+
 def spectrum(x):
 	W = 1024*32
-	hw = np.hamming(W)
-	r = np.zeros((W,1))
-	L = len(x)
-
-	for k in range(0,L-W,W/2):
-		ss = np.fft.fft(x[k:k+W]*hw)
-		r = r + np.conj(ss)*ss
-		print k
+	r = fftOnce(x[:W])
+	for k in range(W/2,len(x)-W,W/2):
+		r = r + fftOnce(x[k:k+W])
 	return r
 
