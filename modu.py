@@ -56,7 +56,7 @@ def main():
 	d = modu(D,P,4,math.pi/8,18)
 	c = toComplex(d,18)
 	pc = utils.spectrum(c)
-	rs = float(4096)/float(len(pc))
+	rs = float(1024)/float(len(pc))
 	x = np.arange(100)*rs
 	import matplotlib.pyplot as plt
 	plt.plot(x,20.*np.log10(pc[:100]))
