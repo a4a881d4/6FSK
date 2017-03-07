@@ -51,12 +51,15 @@ def toComplex(s,W):
 	return np.exp(np.array(r))
 def main():
 	import utils
-	D = utils.rsrc(1024)
-	P = utils.rsrc(1024)
+	D = utils.rsrc(1024*64)
+	P = utils.rsrc(1024*64)
 	d = modu(D,P,4,math.pi/8,18)
 	c = toComplex(d,18)
+	pc = utils.spectrum(c)
+	rs = float(4096)/float(len(pc))
+	x = np.arange(100)*rs
 	import matplotlib.pyplot as plt
-	plt.plot(20.*np.log10(utils.spectrum(c)))
+	plt.plot(x,20.*np.log10(pc[:100]))
 	plt.show()
 
 if __name__ == '__main__':
