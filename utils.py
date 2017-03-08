@@ -39,8 +39,37 @@ class mseq:
 		while poly!=0:
 			k = k+1
 			poly = poly>>1
-		self.order = k
-		self.length = (1>>k)-1
+		self.order = k-1
+		print k
+		self.length = (1<<self.order)-1
 		self.s = []
-		state = self.length
-		for 
+		state = 1
+		for n in range(self.length):
+			state = state<<1
+			if state>self.length:
+				#print "s+0x%x"%state
+				state = state^self.p
+				#print "s-0x%x"%state
+				self.s.append(1)
+			else:
+				self.s.append(0)
+			
+	def printSeq(self,x=None):
+		if x==None:
+			x = self.s
+		for k in x:
+			print k,
+		print ""
+
+	def shift(self,l):
+		return self.s[l:]+self.s[:l]
+
+def main():
+	m = mseq(0x211)
+	m.printSeq()
+	y = m.shift(1)
+	print "shift 1"
+	m.printSeq(y)
+
+if __name__ == '__main__':
+	main()
