@@ -25,3 +25,22 @@ def spectrum(x):
 		r = r + fftOnce(x[k:k+W])
 	return r
 
+def xorsum(k):
+	r = 0		
+	for i in range(self.order):
+		r = r^(k&1)
+		k = k>>1
+	return r&1
+	
+class mseq:
+	def __init__(self,poly):
+		self.p = poly
+		k=0
+		while poly!=0:
+			k = k+1
+			poly = poly>>1
+		self.order = k
+		self.length = (1>>k)-1
+		self.s = []
+		state = self.length
+		for 
