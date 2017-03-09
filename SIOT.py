@@ -17,7 +17,7 @@ class SIOT:
 		self.CPilot[1::2]=Opilot
 
 	def modu(self,D):
-		d = modu(D,self.Pilot,4,math.pi/8,18)
+		d = modu(D,self.Pilot,4,math.pi/6,18)
 		return d
 	
 	def toComplex(self,d):
@@ -26,7 +26,8 @@ class SIOT:
 
 	def r1(self,c,k):
 		t = c[k::16]
-		return np.sum(t[:1024]*np.conj(self.CPilot))
+		r = t[:1024]*np.conj(self.CPilot)
+		return np.sum(r[:-2]*np.conj(r[2:]))
 
 def main():
 	S = SIOT()
