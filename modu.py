@@ -2,6 +2,7 @@ import const
 import freqTab
 import math
 import numpy as np
+import utils
 
 def map(D,P):
 	r = []
@@ -28,10 +29,16 @@ def modu(D,P,E,b,W):
 	if len(D)%2 == 1:
 		P.append(1)
 		D.append(1)
+	hD = D[:E]
+	tD = D[-E:]
+	D = tD + D + hD
+	hP = P[:E]
+	tP = P[-E:]
+	P = tP + P + hP
 	
-	for k in range(E):
-		D.append(D[k])
-		P.append(P[k])
+	#for k in range(E):
+	#	D.append(D[k])
+	#	P.append(P[k])
 
 	S,C,Mask = freqTab.freqTab(b,W)
 	r,p = toFreq(D,P)
@@ -49,12 +56,8 @@ def toComplex(s,W):
 	M = 2.*math.pi/float(1<<W)
 	r = [1j*float(a)*M for a in s]
 	return np.exp(np.array(r))
-def main():
-	import utils
-	D = utils.rsrc(1024*64)
-	P = utils.rsrc(1024*64)
-	d = modu(D,P,4,math.pi/8,18)
-	c = toComplex(d,18)
+
+def showSpectrum(c):
 	pc = utils.spectrum(c)
 	rs = float(1024)/float(len(pc))
 	x = np.arange(100)*rs
@@ -62,5 +65,20 @@ def main():
 	plt.plot(x,20.*np.log10(pc[:100]))
 	plt.show()
 
+def showTiming(c,l):
+	import matplotlib.pyplot as plt
+	x = c[l::1024]
+	plt.plot(x.real,x.imag,'.')
+	plt.show()
+
+def main():
+	D = utils.rsrc(1024*64)
+	P = utils.rsrc(1024*64)
+	d = modu(D,P,4,math.pi/8,18)
+	c = toComplex(d,18)
+	#showSpectrum(c)
+	showTiming(c,1024/16)
+	return c
+
 if __name__ == '__main__':
-	main()
+	c = main()

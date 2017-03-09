@@ -61,15 +61,47 @@ class mseq:
 			print k,
 		print ""
 
+	def sum(self):
+		ss = 0
+		for x in self.s:
+			ss = ss + x
+		return ss
+
+
 	def shift(self,l):
 		return self.s[l:]+self.s[:l]
 
+class gold:
+	def __init__(self,p0,p1):
+		self.m0 = mseq(p0)
+		self.m1 = mseq(p1)
+
+	def seq(self,k0,k1):
+		s0 = self.m0.shift(k0)
+		s1 = self.m1.shift(k1)
+		r = [a^b for (a,b) in zip(s0,s1)]
+		return r
+
+	def toReal(self,s):
+		return np.array([1-2*x for x in s])
+
+	def xcorr(self,x,y):
+		return np.correlate(np.array(x),np.array(y),'full')
+		
 def main():
-	m = mseq(0x211)
+	m = mseq(0x21b)
 	m.printSeq()
 	y = m.shift(1)
 	print "shift 1"
 	m.printSeq(y)
+	print m.sum()
+	g = gold(0x211,0x21b)
+	s = g.toReal(g.seq(1,3))
+	x = g.xcorr(s,s)
+	import matplotlib.pyplot as plt
+	plt.plot(x)
+	plt.show()
+
 
 if __name__ == '__main__':
 	main()

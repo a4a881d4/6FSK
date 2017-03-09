@@ -32,7 +32,6 @@ for f in range(6):
 
 difInvTab = invDict(difTab)
 
-
 def main():
 	print constellationIndex
 	print transTab
