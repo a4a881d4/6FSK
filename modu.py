@@ -3,6 +3,7 @@ import freqTab
 import math
 import numpy as np
 import utils
+import matplotlib.pyplot as plt
 
 def map(D,P):
 	r = []
@@ -57,13 +58,11 @@ def toComplex(s,W):
 	r = [1j*float(a)*M for a in s]
 	return np.exp(np.array(r))
 
-def showSpectrum(c):
+def showSpectrum(c,l):
 	pc = utils.spectrum(c)
 	rs = float(1024)/float(len(pc))
 	x = np.arange(100)*rs
-	import matplotlib.pyplot as plt
-	plt.plot(x,20.*np.log10(pc[:100]))
-	plt.show()
+	plt.plot(x,20.*np.log10(pc[:100]),l)
 
 def showTiming(c,l):
 	import matplotlib.pyplot as plt
@@ -76,8 +75,19 @@ def main():
 	P = utils.rsrc(1024*64)
 	d = modu(D,P,4,math.pi/8,18)
 	c = toComplex(d,18)
-	#showSpectrum(c)
-	showTiming(c,1024/16)
+	showSpectrum(c,'r')
+	d = modu(D,P,4,math.pi/6,18)
+	c = toComplex(d,18)
+	showSpectrum(c,'b')
+	d = modu(D,P,4,math.pi/5,18)
+	c = toComplex(d,18)
+	showSpectrum(c,'y')
+	d = modu(D,P,4,math.pi/4,18)
+	c = toComplex(d,18)
+	showSpectrum(c,'g')
+	
+	#showTiming(c,1024/16)
+	plt.show()
 	return c
 
 if __name__ == '__main__':
