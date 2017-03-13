@@ -2,6 +2,7 @@ import utils
 import numpy as np
 from modu import modu,toComplex
 import math
+from channel import channel
 
 class SIOT:
 	def __init__(self):
@@ -27,15 +28,17 @@ class SIOT:
 	def r1(self,c,k):
 		t = c[k::16]
 		r = t[:1024]*np.conj(self.CPilot)
-		return np.sum(r[:-2]*np.conj(r[2:]))
+		return np.sum(r[:-1]*np.conj(r[1:]))
 
 def main():
 	S = SIOT()
 	D0 = utils.rsrc(1024)
 	D1 = utils.rsrc(1024)
 	d = S.modu(D0) + S.modu(D1)	
-	c = S.toComplex(d)
-	
+	cc = S.toComplex(d)
+	ch = channel(1.,6.,0.9,1)
+	c = ch.ferr(cc)
+	c = ch.awgn(c)    
 	#x = np.correlate(ep,c,'full')
 	
 	x = np.zeros(16*1038)
