@@ -3,6 +3,7 @@ import numpy as np
 from modu import modu,toComplex
 import math
 from channel import channel
+from rfir import rfir
 
 class SIOT:
 	def __init__(self):
@@ -18,7 +19,7 @@ class SIOT:
 		self.CPilot[1::2]=Opilot
 
 	def modu(self,D):
-		d = modu(D,self.Pilot,4,math.pi/6,18)
+		d = modu(D,self.Pilot,4,math.pi/5,18)
 		return d
 	
 	def toComplex(self,d):
@@ -30,18 +31,26 @@ class SIOT:
 		r = t[:1024]*np.conj(self.CPilot)
 		return np.sum(r[:-1]*np.conj(r[1:]))
 
+	def r4(self,c,k):
+		t = c[k::16]
+		rr = t[:1024]*np.conj(self.CPilot)
+		r = rr[::8]+rr[1::8]+rr[2::8]+r[3::8]+rr[4::8]+rr[5::8]+rr[6::8]+r[7::8]
+		return np.sum(r[:-1]*np.conj(r[1:]))
+
 def main():
 	S = SIOT()
 	D0 = utils.rsrc(1024)
 	D1 = utils.rsrc(1024)
 	d = S.modu(D0) + S.modu(D1)	
 	cc = S.toComplex(d)
-	ch = channel(1.,6.,0.9,1)
+	ch = channel(0.1,6.,0.5,16)
 	c = ch.ferr(cc)
 	c = ch.awgn(c)    
+	f = rfir()
+	c = f.filter(c)
 	#x = np.correlate(ep,c,'full')
 	
-	x = np.zeros(16*1038)
+	x = np.zeros(16*1042)
 	for k in range(len(x)):
 		x[k]=np.abs(S.r1(c,k))
 
