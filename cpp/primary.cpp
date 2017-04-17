@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<assert.h>
 
-#define POLYSIZE 4096
+#define POLYSIZE 8192
 typedef struct str_poly
 {
 	char poly[POLYSIZE];

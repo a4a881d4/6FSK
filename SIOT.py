@@ -4,12 +4,13 @@ from modu import modu,toComplex,dpmap
 import math
 from channel import channel
 from rfir import rfir
-
+from const import Primary
 class SIOT:
-	def __init__(self):
-		self.Gpilot = utils.gold(0x409,0x40f)
+	def __init__(self,k):
+		self.length = 1<<k
+		self.Gpilot = utils.gold(Primary[k][0],Primary[k][1])
 		self.Pilot = self.Gpilot.toReal(self.Gpilot.seq(1,3)+[0]).tolist()
-		self.CPilot = np.array(dpmap([0]*1024,self.Pilot))
+		self.CPilot = np.array(dpmap([0]*self.length,self.Pilot))
 		
 		
 	def modu(self,D):
@@ -29,12 +30,12 @@ class SIOT:
 
 	def r1(self,c,k):
 		t = c[k::16]
-		r = t[:1024]*np.conj(self.CPilot)
+		r = t[:self.length]*np.conj(self.CPilot)
 		return np.sum(r[:-1]*np.conj(r[1:]))
 
 	def r4(self,c,k):
 		t = c[k::16]
-		rr = t[:1024]*np.conj(self.CPilot)
+		rr = t[:self.length]*np.conj(self.CPilot)
 		r = rr[::8]+rr[1::8]+rr[2::8]+r[3::8]+rr[4::8]+rr[5::8]+rr[6::8]+r[7::8]
 		return np.sum(r[:-1]*np.conj(r[1:]))
 
@@ -59,12 +60,12 @@ def main0():
 	plt.show()
 
 def main():
-	S = SIOT()
-	D0 = utils.rsrc(1024)
-	D1 = utils.rsrc(1024)
+	S = SIOT(12)
+	D0 = utils.rsrc(S.length)
+	D1 = utils.rsrc(S.length)
 	d = S.modu(D0) + S.modu(D1)	
 	cc = S.toComplex(d)
-	ch = channel(0.0001,6.,1,16)
+	ch = channel(0.000,6.,1.,16)
 	c = ch.ferr(cc)
 	c = ch.awgn(c)    
 	f = rfir()
