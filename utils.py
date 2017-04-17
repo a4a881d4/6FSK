@@ -40,16 +40,14 @@ class mseq:
 			k = k+1
 			poly = poly>>1
 		self.order = k-1
-		print k
+		print "M sequence order",k
 		self.length = (1<<self.order)-1
 		self.s = []
 		state = 1
 		for n in range(self.length):
 			state = state<<1
 			if state>self.length:
-				#print "s+0x%x"%state
 				state = state^self.p
-				#print "s-0x%x"%state
 				self.s.append(1)
 			else:
 				self.s.append(0)
@@ -89,13 +87,13 @@ class gold:
 		return np.correlate(np.array(x),np.array(y),'full')
 		
 def main():
-	m = mseq(0x21b)
+	m = mseq(0x409)
 	m.printSeq()
 	y = m.shift(1)
 	print "shift 1"
 	m.printSeq(y)
 	print m.sum()
-	g = gold(0x211,0x21b)
+	g = gold(0x409,0x40f)
 	s = g.toReal(g.seq(1,3))
 	x = g.xcorr(s,s)
 	import matplotlib.pyplot as plt

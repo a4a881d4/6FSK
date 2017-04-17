@@ -5,17 +5,16 @@ import numpy as np
 import utils
 import matplotlib.pyplot as plt
 
-def map(D,P):
+def dpmap(D,P):
 	r = []
+	p = 1
 	for k in range(len(D)):
-		if k%2 == 0:
-			r.append(D[k]*const.DataA+P[k]*const.PilotA*1j)
-		else:
-			r.append(D[k]*const.DataA*1j+P[k]*const.PilotA)
+		r.append((D[k]*const.DataA+P[k]*const.PilotA*1j)*p)
+		p = p * 1j
 	return r
 
 def toFreq(D,P):
-	m = map(D,P)
+	m = dpmap(D,P)
 	p = [const.constellationIndex[c] for c in m]
 	r = [const.c2f[p[k]][p[k+1]] for k in range(len(p)-1)]
 	return r,p
